@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<style>
+  * {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+</style>
+
+<html>
+  <body>
+    <canvas id="canvas"></canvas>
+    
+    <script src="perlin3.js"></script>
+    
+    <script>
+      var canvas = document.getElementById("canvas");
+      var height = canvas.height = window.innerHeight;
+      var width = canvas.width = window.innerWidth;
+      var ctx = canvas.getContext("2d");
+      var val;
+      
+      perlin = new noise(1);
+      var zoom = 400;
+      var res = 16;
+      var xoffset = 0;
+      var yoffset = 0;
+      
+      function findval(x, y, z) {
+        return (perlin.octave("s2", 16, x/(zoom/res), y/(zoom/res))+perlin.simplex2(x/(zoom/res), y/(zoom/res)))/2;
+      }
+      
+      function draw() {
+        ctx.fillStyle = "#87CEEE";
+        ctx.fillRect(0,0,width,height);
+        for (let x = 0; x < width/res; x++) {
+          for (let y = 0; y < height/res; y++) {
+            val = findval(x+xoffset, y+yoffset);
+            ctx.fillStyle = 'hsl('+ 360*(val/2+.5) +',100%,50%)';
+            //ctx.fillStyle = "rgba(" + (255-(val/2+.5)*255) + ", " + (255-(val/2+.5)*255) + ", " + (255-(val/2+.5)*255) + ", 1)";
+            //ctx.fillStyle = "rgba(255, 255, 255, " + (val/2+.5) + ")";
+            
+            ctx.beginPath();
+            ctx.rect(x*res, y*res, res, res);
+            ctx.fill();
+          }
+        }
+      }
+      
+      const interval = setInterval(draw, 4);
+      
+      function setoffset(canvas, event) {
+        let rect = canvas.getBoundingClientRect();
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
+        xoffset = xoffset+(x-width/2)/res;
+        yoffset = yoffset+(y-height/2)/res;
+      }
+      
+      canvas.addEventListener('mousedown', function(event) {
+        setoffset(canvas, event);
+      });
+      
+      document.addEventListener('keydown', function(event) {
+        const callback = {
+          "ArrowLeft"  : function() {xoffset -= 10/res},
+          "ArrowRight" : function() {xoffset += 10/res},
+          "ArrowUp"    : function() {yoffset -= 10/res},
+          "ArrowDown"  : function() {yoffset += 10/res},
+        }[event.key];
+        callback?.();
+      });
+    </script>
+  </body>
+</html>
