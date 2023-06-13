@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<style>
+  body {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    font-size: 0;
+    background-color: darkslategrey;
+    touch-action: manipulation;
+  }
+  .canvas {
+    /*position: absolute;*/
+    display: inline-block;
+  }
+  p {
+    font-size: 16px;
+    margin: 0px;
+  }
+  select {
+    font-size: 16px;
+    margin: 0px;
+    width: 100%;
+  }
+  .settingsBox {
+    float: right;
+    width: 20%;
+  }
+  input {
+    width: 100%;
+    margin: 0px;
+  }
+</style>
+
+<html>
+  <body>
+    <div class="oscillator">
+      <canvas class="canvas" id="canvasOscillator0"></canvas>
+      <div class="settingsBox">
+        <select oninput="oscillators[0][4].type = this.value;">
+          <option value="sine">Sine</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+          <option value="sawtooth">Sawtooth</option>
+        </select>
+        <input type="range" value="0.5" step="0.25" min="0" max="2" oninput="oscillators[0][5].gain.value = this.value**2">
+      </div>
+    </div>
+    <div class="oscillator">
+      <canvas class="canvas" id="canvasOscillator1"></canvas>
+      <div class="settingsBox">
+        <select oninput="oscillators[1][4].type = this.value;">
+          <option value="sine">Sine</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+          <option value="sawtooth">Sawtooth</option>
+        </select>
+        <input type="range" value="0.5" step="0.25" min="0" max="2" oninput="oscillators[1][5].gain.value = this.value**2">
+      </div>
+    </div>
+    <div class="oscillator">
+      <canvas class="canvas" id="canvasOscillator2"></canvas>
+      <div class="settingsBox">
+        <select oninput="oscillators[2][4].type = this.value;">
+          <option value="sine">Sine</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+          <option value="sawtooth">Sawtooth</option>
+        </select>
+        <input type="range" value="0.5" step="0.25" min="0" max="2" oninput="oscillators[2][5].gain.value = this.value**2">
+      </div>
+    </div>
+    <div class="oscillator">
+      <canvas class="canvas" id="canvasOscillator3"></canvas>
+      <div class="settingsBox">
+        <select oninput="oscillators[3][4].type = this.value;">
+          <option value="sine">Sine</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+          <option value="sawtooth">Sawtooth</option>
+        </select>
+        <input type="range" value="0.5" step="0.25" min="0" max="2" oninput="oscillators[3][5].gain.value = this.value**2">
+      </div>
+    </div>
+    
+    <script>
+      var audioctx = new AudioContext();
+      
+      var oscillators = [];
+      
+      function go() {
+        for (let i = 0; i < 4; i++) {
+          oscillators.push([
+            document.getElementById("canvasOscillator"+i),
+            document.getElementById("canvasOscillator"+i).width = window.innerWidth/5*4,
+            document.getElementById("canvasOscillator"+i).height = window.innerHeight/4+1,
+            document.getElementById("canvasOscillator"+i).getContext("2d"),
+            audioctx.createOscillator(),
+            audioctx.createGain()
+          ]);
+          oscillators[i][0].style.top = window.innerHeight/4*i + "px";
+          oscillators[i][3].fillStyle = "hsl(" + i*100 + ",100%,50%)";
+          oscillators[i][3].fillRect(0, 0, oscillators[i][1], oscillators[i][2]);
+          oscillators[i][4].start();
+          oscillators[i][4].connect(oscillators[i][5]);
+          oscillators[i][5].gain.value = 0.25;
+          //oscillators[i][5].connect(audioctx.destination);
+        }
+      }
+
+      function touchHandler(e) {
+        let osc = [[false,0],[false,0],[false,0],[false,0]];
+        for (let i = 0; i < e.touches.length; i++) {
+          if (e.touches[i].pageX < window.innerWidth/5*4) {
+            osc[Math.floor(e.touches[i].pageY/window.innerHeight*4)][0] = true;
+            osc[Math.floor(e.touches[i].pageY/window.innerHeight*4)][1] = e.touches[i].pageX;
+          }
+        }
+        for (let i = 0; i < 4; i++) {
+          if (osc[i][0]) {
+            oscillators[i][4].frequency.value = 2**(osc[i][1]/window.innerWidth/5*4*(11.7813597-5.78135972)+5.78135972);
+            oscillators[i][5].connect(audioctx.destination);
+          } else {
+            try {
+              oscillators[i][5].disconnect(audioctx.destination);
+            } catch {}
+          }
+        }
+      }
+      
+      document.onclick = () => {
+        go();
+        document.onclick = null;
+      }
+
+      document.addEventListener("touchstart", touchHandler);
+      document.addEventListener("touchmove", touchHandler);
+      document.addEventListener("touchend", touchHandler);
+    </script>
+  </body>
+</html>

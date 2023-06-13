@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<style>
+  * {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+  #speed line {
+    fill: #006EE3;
+    stroke: none;
+  }
+</style>
+
+<html>
+  <body>
+    
+    
+    <div style="color:green; position: absolute; margin-left: 0; margin-right: 0; left: 0; right: 0;">
+      <h3 id="text1"></h3>
+      <h3 id="text2"></h3>
+      <h3 id="text3"></h3>
+      <h3 id="text4"></h3>
+      <h3 id="text5"></h3>
+      <h3 id="text6"></h3>
+      <h3 id="text7"></h3>
+    </div>
+    <button type="button" style="border: 2px solid green; background-color:black; color:green; position: absolute; margin-left: 35%; margin-right: 60%; left: 0; right: 0; height: 36px;" onclick="camX = -width/2; camY = -height/2;"><h3>Center</h3></button>
+    <div style="color:green; position: absolute; margin-left: 40%; margin-right: 0; left: 0; right: 0;">
+      <input type="range" min="1" max="10000000000" value="1000000000" class="slider" id="zoom" oninput="zoom = parseInt(this.value);" style="width:100%; height: 16px;">
+      <input type="range" min="1" max="86400" value="3600" class="slider" id="speed" oninput="speed = parseInt(this.value);" style="width:100%; height: 16px;">
+    </div>
+    
+    <canvas id="canvas"></canvas>
+    <script src="perlin3.js"></script>
+    
+    <script>
+      var canvas = document.getElementById("canvas");
+      var text1 = document.getElementById("text1");
+      var text2 = document.getElementById("text2");
+      var text3 = document.getElementById("text3");
+      var text4 = document.getElementById("text4");
+      var text5 = document.getElementById("text5");
+      var text6 = document.getElementById("text6");
+      var text7 = document.getElementById("text7");
+      var zoom = document.getElementById("zoom").value;
+      var speed = parseInt(document.getElementById("speed").value);
+      var height = canvas.height = window.innerHeight;
+      var width = canvas.width = window.innerWidth;
+      var ctx = canvas.getContext("2d");
+      var camX = -width/2;
+      var camY = -height/2;
+      var time = 0;
+      
+      var particles = [];
+      var num = 9;
+      
+      //for (let i = 0; i < num; i++) {
+      //  particles.push({
+      //    x: Math.random()*width,
+      //    y: Math.random()*height,
+      //    xVel: 0,
+      //    yVel: 0,
+      //    mass: Math.random()*5000000000000000000000000000000,
+      //    color: "yellow",
+      //    radius: 9283880
+      //  });
+      //}
+      
+      particles.push({
+        x: 0,
+        y: 0,
+        xVel: 0,
+        yVel: 0,
+        mass: 1989000000000000000000000000000,
+        color: "yellow",
+        radius: 10,
+        realRadius: 695700000,
+        name: "sun"
+      });
+      particles.push({
+        x: 0,
+        y: 57900000000,
+        xVel: 47400,
+        yVel: 0,
+        mass: 330000000000000000000000,
+        color: "grey",
+        radius: 2,
+        realRadius: 2439500,
+        name: "mercury"
+      });
+      particles.push({
+        x: 0,
+        y: 108200000000,
+        xVel: 35000,
+        yVel: 0,
+        mass: 4870000000000000000000000,
+        color: "orange",
+        radius: 5,
+        realRadius: 6052000,
+        name: "venus"
+      });
+      particles.push({
+        x: 0,
+        y: 150520000000,
+        xVel: 29780,
+        yVel: 0,
+        mass: 5972000000000000000000000,
+        color: "blue",
+        radius: 5,
+        realRadius: 6378000,
+        name: "earth"
+      });
+      particles.push({
+        x: 0,
+        y: 150520000000+384000000,
+        xVel: 29780+1024,
+        yVel: 0,
+        mass: 73000000000000000000000,
+        color: "grey",
+        radius: 2,
+        realRadius: 6378000,
+        name: "moon"
+      });
+      particles.push({
+        x: 0,
+        y: 228000000000,
+        xVel: 24100,
+        yVel: 0,
+        mass: 642000000000000000000000,
+        color: "red",
+        radius: 3,
+        realRadius: 3396000,
+        name: "mars"
+      });
+      particles.push({
+        x: 0,
+        y: 778500000000,
+        xVel: 13100,
+        yVel: 0,
+        mass: 1898000000000000000000000000,
+        color: "brown",
+        radius: 7,
+        realRadius: 71492000,
+        name: "jupiter"
+      });
+      particles.push({
+        x: 0,
+        y: 1432000000000,
+        xVel: 9700,
+        yVel: 0,
+        mass: 568000000000000000000000000,
+        color: "brown",
+        radius: 7,
+        realRadius: 60268000,
+        name: "saturn"
+      });
+      particles.push({
+        x: 0,
+        y: 2867000000000,
+        xVel: 6800,
+        yVel: 0,
+        mass: 86800000000000000000000000,
+        color: "blue",
+        radius: 6,
+        realRadius: 25559000,
+        name: "uranus"
+      });
+      particles.push({
+        x: 0,
+        y: 4515000000000,
+        xVel: 5400,
+        yVel: 0,
+        mass: 642000000000000000000000,
+        color: "blue",
+        radius: 6,
+        realRadius: 24764000,
+        name: "neptune"
+      });
+      
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height);
+      function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, " + 1 + ")";
+        ctx.fillRect(0, 0, width, height);
+        ctx.strokeStyle = 'yellow';
+        for (let i = 0; i < num; i++) {
+          ctx.fillStyle = particles[i].color;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x/zoom-camX, particles[i].y/zoom-camY);
+          ctx.lineTo(particles[i].x/zoom+particles[i].xVel*2000000/zoom-camX, particles[i].y/zoom+particles[i].yVel*2000000/zoom-camY);
+          ctx.stroke();
+          
+          ctx.beginPath();
+          ctx.arc(particles[i].x/zoom-camX, particles[i].y/zoom-camY, particles[i].realRadius/zoom, 0, 2 * Math.PI, false);
+          ctx.fill();
+        }
+      }
+      
+      function simulate() {
+        for (let i = 0; i < num; i++) {
+          particles[i].x += particles[i].xVel*speed;
+          particles[i].y += particles[i].yVel*speed;
+          
+          for (let j = 0; j < num; j++) {
+            if (i != j) {
+              let force = (particles[i].mass*particles[j].mass)/(Math.sqrt((particles[j].x-particles[i].x)**2 + (particles[j].y-particles[i].y)**2)**2)*0.0000000000667425592*speed;
+              let angleFromA = Math.atan2(particles[j].y-particles[i].y, particles[j].x-particles[i].x);
+              
+              particles[i].xVel += Math.cos(angleFromA)*force/particles[i].mass;
+              particles[i].yVel += Math.sin(angleFromA)*force/particles[i].mass;
+            }
+          }
+        }
+      }
+      
+      function main() {
+        simulate();
+        draw();
+        time += speed;
+        text1.innerHTML = "X, Y, V of main object: "+(Math.round(particles[0].x*1)/1).toString()+", "+(Math.round(particles[0].y*1)/1).toString()+", "+(Math.round(Math.sqrt(particles[0].xVel**2 + particles[0].yVel**2)*10)/10).toString();
+        text2.innerHTML = "X, Y, V of satalite: "+(Math.round(particles[1].x*1)/1).toString()+", "+(Math.round(particles[1].y*1)/1).toString()+", "+(Math.round(Math.sqrt(particles[1].xVel**2 + particles[1].yVel**2)*10)/10).toString();
+        //text3.innerHTML = "X, Y, V of satalite 2: "+(Math.round(particles[2].x*1)/1).toString()+", "+(Math.round(particles[2].y*1)/1).toString()+", "+(Math.round(Math.sqrt(particles[2].xVel**2 + particles[2].yVel**2)*10)/10).toString();
+        text4.innerHTML = "Distance: "+(Math.round(Math.sqrt((particles[1].x-particles[0].x)**2 + (particles[1].y-particles[0].y)**2)*100)/100).toString();
+        text6.innerHTML = "Date: "+Math.floor(time/31553280).toString()+"/"+(Math.floor(time/86400)-Math.floor(Math.floor(time/31553280)*365.2)).toString();
+        text7.innerHTML = "Time: "+(Math.floor(time/3600)-Math.floor(time/86400)*24).toString()+":"+(Math.floor(time/60)-Math.floor(time/3600)*60).toString();
+      }
+      
+      const drawInterval = setInterval(main, 4);
+      
+      document.addEventListener('keydown', function(event) {
+        const callback = {
+          "ArrowLeft"  : function() {camX -= 10},
+          "ArrowRight" : function() {camX += 10},
+          "ArrowUp"    : function() {camY -= 10},
+          "ArrowDown"  : function() {camY += 10},
+        }[event.key];
+        callback?.();
+      });
+      
+      window.addEventListener("resize", function(event) {
+        height = canvas.height = window.innerHeight;
+        width = canvas.width = window.innerWidth;
+      });
+    </script>
+  </body>
+</html>

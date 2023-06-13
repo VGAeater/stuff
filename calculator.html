@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html>
+  <body style="margin: 0px; background-color: #bbb; padding-right: 8px;">
+    <div style="border: black 2px solid; display: block; background-color: #add8e6; margin-left: 8px; margin-top: 8px;">
+      <h1 style="margin: 8px; display: inline-block;">Constants</h1>
+      <p style="margin: 8px; display: inline-block;">π = 3.14159265359<br><i>e</i> = 2.71828182846</p>
+      <p style="margin: 8px; display: inline-block;">Φ = 1.61803398875<br>√2 = 1.41421356237</p>
+      <p style="margin: 8px; display: inline-block;">√3 = 1.73205080757<br><i>sin</i>45 deg = 0.70710678118</p>
+      <p style="margin: 8px; display: inline-block;">γ = 0.57721566490</p>
+    </div>
+    <div style="border: black 2px solid; padding-right: 8px; padding-bottom: 8px; margin-left: 8px; margin-top: 8px; display: inline-block; background-color: #ffde8a;">
+      <h1 style="margin: 0px; margin-left: 8px; margin-top: 4px;">3D</h1>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Line</h1>
+        Point A
+        <br>
+        (
+        <input type="text" id="x1Line3d" style="width:80px">
+        ,
+        <input type="text" id="y1Line3d" style="width:80px">
+        ,
+        <input type="text" id="z1Line3d" style="width:80px">
+        )<br>Point B<br>
+        (
+        <input type="text" id="x2Line3d" style="width:80px">
+        ,
+        <input type="text" id="y2Line3d" style="width:80px">
+        ,
+        <input type="text" id="z2Line3d" style="width:80px">
+        )<br>
+        <p id="outputLine3d">Distance = <br>Midpoint = <br>Sum = </p>
+        <input type="button" id="calculate" value="Calculate" onclick="line3d();">
+      </div>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Box</h1>
+        Width
+        <br>
+        <input type="text" id="widthBox3d" style="width:80px">
+        <br>
+        Length
+        <br>
+        <input type="text" id="lengthBox3d" style="width:80px">
+        <br>
+        Height
+        <br>
+        <input type="text" id="heightBox3d" style="width:80px">
+        <br>
+        <p id="outputBox3d">Volume = <br>Area = <br>Lateral Area = </p>
+        <input type="button" id="calculate" value="Calculate" onclick="box3d();">
+      </div>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #f00;">
+        <h1 style="margin: 0px;">Pyramid</h1>
+        Base Area
+        <br>
+        <input type="text" id="basePyramid3d" style="width:80px">
+        <br>
+        Diagonal Length
+        <br>
+        <input type="text" id="diagonalPyramid3d" style="width:80px">
+        <br>
+        <p id="outputPyramid3d">Volume = </p>
+        <input type="button" id="calculate" value="Calculate" onclick="pyramid3d();">
+      </div>
+    </div>
+    
+    <div style="border: black 2px solid; padding-right: 8px; padding-bottom: 8px; margin-left: 8px; margin-top: 8px; display: inline-block; background-color: #d1ffbd;">
+      <h1 style="margin: 0px; margin-left: 8px; margin-top: 4px;">2D</h1>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Line</h1>
+        Point A
+        <br>
+        (
+        <input type="text" id="x1Line2d" style="width:80px">
+        ,
+        <input type="text" id="y1Line2d" style="width:80px">
+        )<br>Point B<br>
+        (
+        <input type="text" id="x2Line2d" style="width:80px">
+        ,
+        <input type="text" id="y2Line2d" style="width:80px">
+        )<br>
+        <p id="outputLine2d">Distance = <br>Midpoint = <br>Sum = </p>
+        <input type="button" id="calculate" value="Calculate" onclick="line2d();">
+      </div>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Rectangle</h1>
+        Width
+        <br>
+        <input type="text" id="widthRect2d" style="width:80px">
+        <br>
+        Length
+        <br>
+        <input type="text" id="heightRect2d" style="width:80px">
+        <br>
+        <p id="outputRect2d">Area = <br>Perimeter = </p>
+        <input type="button" id="calculate" value="Calculate" onclick="rect2d();">
+      </div>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Trapazoid</h1>
+        Base 1
+        <br>
+        <input type="text" id="base1Trap2d" style="width:80px">
+        <br>
+        Base 2
+        <br>
+        <input type="text" id="base2Trap2d" style="width:80px">
+        <br>
+        Height
+        <br>
+        <input type="text" id="heightTrap2d" style="width:80px">
+        <br>
+        <p id="outputTrap2d">Area = </p>
+        <input type="button" id="calculate" value="Calculate" onclick="trap2d();">
+      </div>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Paralelagram</h1>
+        Side 1
+        <br>
+        <input type="text" id="side1Para2d" style="width:80px">
+        <br>
+        Side 2
+        <br>
+        <input type="text" id="side2Para2d" style="width:80px">
+        <br>
+        Angle
+        <br>
+        <input type="text" id="anglePara2d" style="width:80px">
+        <br>
+        <p id="outputPara2d">Area = <br>Perimeter = </p>
+        <input type="button" id="calculate" value="Calculate" onclick="para2d();">
+      </div>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Circle</h1>
+        Radius
+        <br>
+        <input type="text" id="radiusCircle2d" style="width:80px">
+        <br>
+        Angle
+        <br>
+        <input type="text" id="angleCircle2d" value="360" style="width:80px">
+        <br>
+        <p id="outputCircle2d">Area = <br>Perimeter = </p>
+        <input type="button" id="calculate" value="Calculate" onclick="circle2d();">
+      </div>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Polar To Rect</h1>
+        Point
+        <br>
+        (
+        <input type="text" id="anglePolarToRect2d" style="width:80px">
+        ,
+        <input type="text" id="radiusPolarToRect2d" style="width:80px">
+        )<br>
+        <p id="polarToRect2d">(X, Y)</p>
+        <input type="button" id="calculate" value="Calculate" onclick="polarToRect2d();">
+      </div>
+      <div style="border: black 2px solid; padding: 8px; margin-left: 8px; margin-top: 8px; width: 320px; display: inline-block; float: left; background-color: #fff;">
+        <h1 style="margin: 0px;">Rect To Polar</h1>
+        Point
+        <br>
+        (
+        <input type="text" id="xRectToPolar2d" style="width:80px">
+        ,
+        <input type="text" id="yRectToPolar2d" style="width:80px">
+        )<br>
+        <p id="rectToPolar2d">(θ, r)</p>
+        <input type="button" id="calculate" value="Calculate" onclick="rectToPolar2d();">
+      </div>
+    </div>
+    
+    <script>
+      function line3d() {
+        document.getElementById("outputLine3d").innerHTML = "Distance = " + Math.sqrt((document.getElementById("x2Line3d").value-document.getElementById("x1Line3d").value)**2+(document.getElementById("y2Line3d").value-document.getElementById("y1Line3d").value)**2+(document.getElementById("z2Line3d").value-document.getElementById("z1Line3d").value)**2);
+        document.getElementById("outputLine3d").innerHTML += "<br>Midpoint = (" + (parseFloat(document.getElementById("x2Line3d").value)+parseFloat(document.getElementById("x1Line3d").value))/2 + ", " + (parseFloat(document.getElementById("y2Line3d").value)+parseFloat(document.getElementById("y1Line3d").value))/2 + ", " + (parseFloat(document.getElementById("z2Line3d").value)+parseFloat(document.getElementById("z1Line3d").value))/2 + ")";
+        document.getElementById("outputLine3d").innerHTML += "<br>Sum = (" + (parseFloat(document.getElementById("x2Line3d").value)+parseFloat(document.getElementById("x1Line3d").value)) + ", " + (parseFloat(document.getElementById("y2Line3d").value)+parseFloat(document.getElementById("y1Line3d").value)) + ", " + (parseFloat(document.getElementById("z2Line3d").value)+parseFloat(document.getElementById("z1Line3d").value)) + ")";
+      }
+      function box3d() {
+        document.getElementById("outputBox3d").innerHTML = "Volume = " + document.getElementById("widthBox3d").value*document.getElementById("heightBox3d").value*document.getElementById("lengthBox3d").value + "u<sup>3</sup>";
+        document.getElementById("outputBox3d").innerHTML += "<br>Area = " + (document.getElementById("widthBox3d").value*document.getElementById("heightBox3d").value*2 + document.getElementById("widthBox3d").value*document.getElementById("lengthBox3d").value*2 + document.getElementById("lengthBox3d").value*document.getElementById("heightBox3d").value*2) + "u<sup>2</sup>";
+        document.getElementById("outputBox3d").innerHTML += "<br>Lateral Area = " + (document.getElementById("widthBox3d").value*document.getElementById("heightBox3d").value*2 + document.getElementById("lengthBox3d").value*document.getElementById("heightBox3d").value*2) + "u<sup>2</sup>";
+      }
+      function pyramid3d() {
+        document.getElementById("outputPyramid3d").innerHTML = "Volume = " + document.getElementById("diagonalPyramid3d").value*document.getElementById("basePyramid3d").value/3 + "u<sup>3</sup>";
+      }
+      function line2d() {
+        document.getElementById("outputLine2d").innerHTML = "Distance = " + Math.sqrt((document.getElementById("x2Line2d").value-document.getElementById("x1Line2d").value)**2+(document.getElementById("y2Line2d").value-document.getElementById("y1Line2d").value)**2);
+        document.getElementById("outputLine2d").innerHTML += "<br>Midpoint = (" + (parseFloat(document.getElementById("x2Line2d").value)+parseFloat(document.getElementById("x1Line2d").value))/2 + ", " + (parseFloat(document.getElementById("y2Line2d").value)+parseFloat(document.getElementById("y1Line2d").value))/2 + ")";
+        document.getElementById("outputLine2d").innerHTML += "<br>Sum = (" + (parseFloat(document.getElementById("x2Line2d").value)+parseFloat(document.getElementById("x1Line2d").value)) + ", " + (parseFloat(document.getElementById("y2Line2d").value)+parseFloat(document.getElementById("y1Line2d").value)) + ")";
+      }
+      function rect2d() {
+        document.getElementById("outputRect2d").innerHTML = "Area = " + document.getElementById("widthRect2d").value*document.getElementById("heightRect2d").value + "u<sup>2</sup>";
+        document.getElementById("outputRect2d").innerHTML += "<br>Perimeter = " + (document.getElementById("widthRect2d").value*2+document.getElementById("heightRect2d").value*2);
+      }
+      function trap2d() {
+        document.getElementById("outputTrap2d").innerHTML = "Area = " + (parseFloat(document.getElementById("base1Trap2d").value)+parseFloat(document.getElementById("base2Trap2d").value))/2*document.getElementById("heightTrap2d").value + "u<sup>2</sup>";
+      }
+      function para2d() {
+        document.getElementById("outputPara2d").innerHTML = "Area = " + (document.getElementById("side1Para2d").value*Math.cos((document.getElementById("anglePara2d").value-90)/180*Math.PI)*document.getElementById("side2Para2d").value) + "u<sup>2</sup>";
+        document.getElementById("outputPara2d").innerHTML += "<br>Perimeter = " + document.getElementById("side1Para2d").value*2+document.getElementById("side2Para2d").value*2;
+      }
+      function circle2d() {
+        document.getElementById("outputCircle2d").innerHTML = "Area = " + (document.getElementById("radiusCircle2d").value*document.getElementById("radiusCircle2d").value*Math.PI)/360*document.getElementById("angleCircle2d").value + "u<sup>2</sup>";
+        document.getElementById("outputCircle2d").innerHTML += "<br>Perimeter = " + document.getElementById("side1Para2d").value*2+document.getElementById("side2Para2d").value*2;
+      }
+      function rectToPolar2d() {
+        document.getElementById("rectToPolar2d").innerHTML = "(" + Math.atan2(document.getElementById("yRectToPolar2d").value, document.getElementById("xRectToPolar2d").value)/Math.PI*180;
+        document.getElementById("rectToPolar2d").innerHTML += ", " + Math.hypot(document.getElementById("yRectToPolar2d").value, document.getElementById("xRectToPolar2d").value) + ")";
+      }
+      function polarToRect2d() {
+        document.getElementById("polarToRect2d").innerHTML = "(" + Math.cos(document.getElementById("anglePolarToRect2d").value/180*Math.PI)*document.getElementById("radiusPolarToRect2d").value;
+        document.getElementById("polarToRect2d").innerHTML += ", " + Math.sin(document.getElementById("anglePolarToRect2d").value/180*Math.PI)*document.getElementById("radiusPolarToRect2d").value + ")";
+      }
+    </script>
+  </body>
+</html>

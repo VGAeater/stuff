@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<style>
+  * {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+</style>
+
+<html>
+  <body>
+    <canvas id="canvas"></canvas>
+    
+    <script src="perlin3.js"></script>
+    
+    <script>
+      var canvas = document.getElementById("canvas");
+      var height = canvas.height = window.innerHeight;
+      var width = canvas.width = window.innerWidth;
+      var ctx = canvas.getContext("2d");
+      var val;
+      const radius = 5;
+      const particles = [];
+      var num = 50;
+      iLen = 30;
+      iSpa = 40;
+      
+      for (var i = 0; i<num; i++) {
+        particles.push([Math.random()*width, Math.random()*height]);
+      }
+      alert(particles);
+      
+      perlin = new noise();
+      var zoom = 400;
+      var z = 0;
+      var zChange = 0.005;
+      
+      function draw() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = 'lime';
+        ctx.strokeStyle = 'red';
+        for (var i = 0; i<width/iSpa; i++) {
+          for (var j = 0; j<height/iSpa; j++) {
+            val = perlin.simplex3(i*iSpa/zoom, j*iSpa/zoom, z)
+            ctx.beginPath();
+            ctx.moveTo(i*iSpa, j*iSpa);
+            ctx.lineTo(i*iSpa+Math.cos(val*Math.PI)*iLen, j*iSpa+Math.sin(val*Math.PI)*iLen);
+            ctx.stroke();
+          }
+        }
+        ctx.strokeStyle = 'yellow';
+        for (var i = 0; i<num; i++) {
+          val = perlin.octave("s3", 1, particles[i][0]/zoom, particles[i][1]/zoom, z)
+          particles[i][0] += Math.round(Math.cos(val*Math.PI)*100)/100;
+          particles[i][1] += Math.round(Math.sin(val*Math.PI)*100)/100;
+          
+          if (particles[i][0] > width) {
+            particles[i][0] = 0;
+          } if (particles[i][0] < 0) {
+            particles[i][0] = width;
+          } if (particles[i][1] > height) {
+            particles[i][1] = 0;
+          } if (particles[i][1] < 0) {
+            particles[i][1] = height;
+          }
+          
+          ctx.beginPath();
+          ctx.arc(particles[i][0], particles[i][1], radius, 0, 2 * Math.PI, false);
+          ctx.fill();
+          
+          ctx.beginPath();
+          ctx.moveTo(particles[i][0], particles[i][1]);
+          ctx.lineTo(particles[i][0]+Math.cos(val*Math.PI)*50, particles[i][1]+Math.sin(val*Math.PI)*50);
+          ctx.stroke();
+        }
+        z += zChange
+      }
+      
+      function dewdvrw() {
+        draw();
+      }
+      
+      const interval = setInterval(dewdvrw, 4);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<style>
+  * {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+</style>
+
+<html>
+  <body>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+      var canvas = document.getElementById("canvas");
+      var height = canvas.height = window.innerHeight;
+      var width = canvas.width = window.innerWidth;
+      var ctx = canvas.getContext("2d");
+      
+      var fish = [];
+      var radius = 4;
+      var t = 0;
+      
+      var pressedKeys = {};
+      window.onkeyup = function(e) { pressedKeys[e.key] = false; }
+      window.onkeydown = function(e) { pressedKeys[e.key] = true; }
+      
+      const distance = (x1, y1, x2, y2) => Math.hypot(x2 - x1, y2 - y1);
+      
+      for (var i = 0; i < 200; i++) {
+        fish.push([Math.random()*width, Math.random()*height, Math.random()*Math.PI*2, 0]);
+      }
+      
+      function render() {
+        ctx.fillStyle = "green";
+        ctx.fillRect(0, 0, width, height);
+        
+        for (let i = 0; i < fish.length;  i++) {
+          ctx.fillStyle = "#87CEEE";
+          ctx.beginPath();
+          ctx.arc(fish[i][0], fish[i][1], radius, 0, 2 * Math.PI, false);
+          ctx.arc(fish[i][0]+Math.cos(fish[i][2])*4, fish[i][1]+Math.sin(fish[i][2])*4, radius/2, 0, 2 * Math.PI, false);
+          ctx.fill();
+        }
+      }
+      
+      function main() {
+        render();
+        for (let i = 0; i < fish.length;  i++) {
+          fish[i][0] += Math.cos(fish[i][2])/2;
+          fish[i][1] += Math.sin(fish[i][2])/2;
+          if (t%10 == 0) {
+            if (fish[i][0] > width) {
+              fish[i][0] = 0;
+            } if (fish[i][0] < 0) {
+              fish[i][0] = width;
+            } if (fish[i][1] > height) {
+              fish[i][1] = 0;
+            } if (fish[i][1] < 0) {
+              fish[i][1] = height;
+            }
+            let closest = 0;
+            for (let j = 0; j < fish.length;  j++) {
+              if (i != j) {
+                if (distance(fish[i][0], fish[i][1], fish[j][0], fish[j][1]) < distance(fish[i][0], fish[i][1], fish[closest][0], fish[closest][1])) {
+                  closest = j;
+                }
+                fish[i][2] -= (fish[i][2]-fish[j][2])/(distance(fish[i][0], fish[i][1], fish[j][0], fish[j][1])**2);
+                fish[i][2] -= (fish[i][2]-Math.atan2(fish[i][1]-fish[j][1], fish[i][0]-fish[j][0]))/(distance(fish[i][0], fish[i][1], fish[j][0], fish[j][1])**2);
+              }
+            }
+            //if (distance(fish[i][0], fish[i][1], fish[closest][0], fish[closest][1]) < 10) {
+            //  fish[i][2] -= (fish[i][2]-Math.atan2(fish[i][1]-fish[closest][1], fish[i][0]-fish[closest][0]));
+            //}
+            //if (distance(fish[i][0], fish[i][1], fish[closest][0], fish[closest][1]) < 100) {
+            //  fish[i][2] -= (fish[i][2]-fish[closest][2])/20;
+            //}
+            fish[i][3] += (Math.random()-0.5)/10;
+            fish[i][2] += fish[i][3];
+          }
+        }
+        t++
+      }
+      
+      const interval = setInterval(main, 4);
+    </script>
+  </body>
+</html>
