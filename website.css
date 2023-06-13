@@ -37,7 +37,7 @@ html, body {
   width: 25%;
   height: 30vh;
   margin-top: 5vh;
-  position: block;
+  position: static;
   margin-left: 6.25%;
   display: inline-block;
   border-radius: 10px 10px 10px 10px;
