@@ -35,9 +35,9 @@ html, body {
 
 .box {
   width: 25%;
-  height: 40vh;
-  margin-top: 10vh;
-  /*position: relative;*/
+  height: 30vh;
+  margin-top: 5vh;
+  position: block;
   margin-left: 6.25%;
   display: inline-block;
   border-radius: 10px 10px 10px 10px;
