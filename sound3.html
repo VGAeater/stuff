@@ -135,11 +135,10 @@
       document.onclick = () => {
         go();
         document.onclick = null;
+        document.addEventListener("touchstart", touchHandler);
+        document.addEventListener("touchmove", touchHandler);
+        document.addEventListener("touchend", touchHandler);
       }
-
-      document.addEventListener("touchstart", touchHandler);
-      document.addEventListener("touchmove", touchHandler);
-      document.addEventListener("touchend", touchHandler);
     </script>
   </body>
 </html>
