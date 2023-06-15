@@ -111,23 +111,23 @@
       }
 
       function touchHandler(e) {
-        e.preventDefault();
-        
-        let osc = [[false,0],[false,0],[false,0],[false,0]];
-        for (let i = 0; i < e.touches.length; i++) {
-          if (e.touches[i].pageX < window.innerWidth/5*4) {
+        if (e.touches[i].pageX < window.innerWidth/5*4) {
+          e.preventDefault();
+          
+          let osc = [[false,0],[false,0],[false,0],[false,0]];
+          for (let i = 0; i < e.touches.length; i++) {
             osc[Math.floor(e.touches[i].pageY/window.innerHeight*4)][0] = true;
             osc[Math.floor(e.touches[i].pageY/window.innerHeight*4)][1] = e.touches[i].pageX;
           }
-        }
-        for (let i = 0; i < 4; i++) {
-          if (osc[i][0]) {
-            oscillators[i][4].frequency.value = 2**(osc[i][1]/window.innerWidth/5*4*(11.7813597-5.78135972)+5.78135972);
-            oscillators[i][5].connect(audioctx.destination);
-          } else {
-            try {
-              oscillators[i][5].disconnect(audioctx.destination);
-            } catch {}
+          for (let i = 0; i < 4; i++) {
+            if (osc[i][0]) {
+              oscillators[i][4].frequency.value = 2**(osc[i][1]/window.innerWidth/5*4*(11.7813597-5.78135972)+5.78135972);
+              oscillators[i][5].connect(audioctx.destination);
+            } else {
+              try {
+                oscillators[i][5].disconnect(audioctx.destination);
+              } catch {}
+            }
           }
         }
       }
