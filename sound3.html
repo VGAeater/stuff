@@ -111,7 +111,7 @@
       }
 
       function touchHandler(e) {
-        if (e.touches[e.touches.length].pageX < window.innerWidth/5*4) {
+        if (e.touches[e.touches.length-1].pageX < window.innerWidth/5*4) {
           e.preventDefault();
           
           let osc = [[false,0],[false,0],[false,0],[false,0]];
