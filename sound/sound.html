@@ -206,6 +206,9 @@
       var invert = false;
       var resizeControl = false;
       
+      var maxCutOff = 255;
+      var minCutOff = 0;
+      
       function toggleOverdrive() {
         overdrive = !overdrive;
         if (overdrive) {
@@ -310,13 +313,13 @@
       function waveDraw(arr) {
         //wavectx.fillStyle = "darkslategrey";
         wavectx.strokeStyle = "yellow";
-        wavectx.lineWidth = 2;
+        wavectx.lineWidth = 1;
         //wavectx.fillRect(0, 0, widthWave, heightWave);
         wavectx.clearRect(0, 0, widthWave, heightWave);
         wavectx.beginPath();
         for (let i = 0; i < arr.length; i++) {
           //wavectx.fillStyle = "hsl(" + (120-arr[i]/255*120) + ",75%,75%)";
-          wavectx.lineTo(i/arr.length*widthWave, heightWave-arr[i]/256*heightWave);
+          wavectx.lineTo(i/arr.length*widthWave, heightWave-arr[i]/256*heightWave); // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
           //drawctx.fillRect(100, 100, 100, 100);
         }
         wavectx.stroke();
@@ -415,9 +418,7 @@
         gjio = setInterval(function() {
           if (updating) {
             spe.getByteFrequencyData(frequencyArray);
-            spe.getByteTimeDomainData(waveFormArray);
-            maxCutOff = 255;
-            minCutOff = 0;
+            spe.getFloatFrequencyData(waveFormArray);
             let min = Math.min.apply(null, waveFormArray),
                 max = Math.max.apply(null, waveFormArray);
             if (max > maxCutOff || min < minCutOff) {
