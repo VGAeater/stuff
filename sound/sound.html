@@ -78,7 +78,7 @@
       <p>Freq: </p>
       <input type="range" value="8" step="0.01" min="5" max="110" oninput="osc.frequency.value = this.value**2;">
       <p>Zoom: </p>
-      <input type="range" value="8" step="1" min="5" max="12" oninput="try{spe.fftSize = 2**this.value; frequencyArray = new Uint8Array(spe.frequencyBinCount); waveFormArray = new Uint8Array(spe.fftSize);}catch(err){alert(err)}">
+      <input type="range" value="8" step="1" min="5" max="12" oninput="try{spe.fftSize = 2**this.value; frequencyArray = new Float32Array(spe.frequencyBinCount); waveFormArray = new Float32Array(spe.fftSize);}catch(err){alert(err)}">
       <p>Gain: </p>
       <input type="range" value="1" step="0.01" min="0" max="3" oninput="gainNode.gain.value = this.value**2*(Number(invert)*2-1)*(1+99*overdrive);">
       <br>
@@ -349,8 +349,8 @@
         //frequencyctx.fillRect(0, 0, widthFrequency, heightFrequency);
         frequencyctx.clearRect(0, 0, widthFrequency, heightFrequency);
         for (let i = 0; i < arr.length; i++) {
-          frequencyctx.fillStyle = "hsl(" + (120-arr[i]/255*120) + ",75%,75%)";
-          frequencyctx.fillRect(i/arr.length*widthFrequency, heightFrequency, widthFrequency/arr.length+1, -arr[i]/256*heightFrequency);
+          frequencyctx.fillStyle = "hsl(" + (120-arr[i]) + ",75%,75%)";
+          frequencyctx.fillRect(i/arr.length*widthFrequency, heightFrequency, widthFrequency/arr.length+1, -arr[i]/120*heightFrequency);
           //drawctx.fillRect(100, 100, 100, 100);
         } // toFixed
         frequencyctx.font = '32px mono';
@@ -400,8 +400,8 @@
         mic = audioctx.createMediaStreamSource(stream);
         spe = audioctx.createAnalyser();
         spe.fftSize = 256;
-        frequencyArray = new Uint8Array(spe.frequencyBinCount);
-        waveFormArray = new Uint8Array(spe.fftSize);
+        frequencyArray = new Float32Array(spe.frequencyBinCount);
+        waveFormArray = new Float32Array(spe.fftSize);
         osc = audioctx.createOscillator();
         osc.frequency.value = 187.5;
         //osc.connect(gainNode);
