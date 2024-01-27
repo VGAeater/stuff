@@ -56,7 +56,7 @@
     width: calc(100% - 16px);
   }
   select {
-    
+
   }
 </style>
 
@@ -78,7 +78,7 @@
       <p>Freq: </p>
       <input type="range" value="8" step="0.01" min="5" max="110" oninput="osc.frequency.value = this.value**2;">
       <p>Zoom: </p>
-      <input type="range" value="8" step="1" min="5" max="12" oninput="try{spe.fftSize = 2**this.value; frequencyArray = new Float32Array(spe.frequencyBinCount); waveFormArray = new Float32Array(spe.fftSize);}catch(err){alert(err)}">
+      <input type="range" value="8" step="1" min="5" max="12" oninput="try{spe.fftSize = 2**this.value; frequencyArray = new Uint8Array(spe.frequencyBinCount); waveFormArray = new Uint8Array(spe.fftSize);}catch(err){alert(err)}">
       <p>Gain: </p>
       <input type="range" value="1" step="0.01" min="0" max="3" oninput="gainNode.gain.value = this.value**2*(Number(invert)*2-1)*(1+99*overdrive);">
       <br>
@@ -92,111 +92,109 @@
       <canvas class="canvas" id="canvasTuner" style="position: relative;"></canvas>
     </div>
     <script>
-      navigator.getUserMedia = navigator.getUserMedia
-                            || navigator.webkitGetUserMedia
-                            || navigator.mozGetUserMedia;
+      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
       navigator.getUserMedia({video:false,audio:true},callback,console.log);
-     
+
       var updating = true;
-     
+
       //document.getElementById("canvas").addEventListener("onclick", function(e) {
       //  updating = !updating;
       //});
-      
+
       var canvasFrequency = document.getElementById("canvasFrequency");
       var heightFrequency = canvasFrequency.height = window.innerHeight/5+1;
       var widthFrequency = canvasFrequency.width = window.innerWidth/4*3+1;
       canvasFrequency.style.bottom = "0px";//window.innerHeight/3*2+"px";
       var frequencyctx = canvasFrequency.getContext("2d");
-     
+
       var canvasWave = document.getElementById("canvasWave");
       var heightWave = canvasWave.height = window.innerHeight/5*3;
       var widthWave = canvasWave.width = window.innerWidth/4*3+1;
       var wavectx = canvasWave.getContext("2d");
-      
+
       var canvasWaveLong = document.getElementById("canvasWaveLong");
       var heightWaveLong = canvasWaveLong.height = window.innerHeight/5;
       var widthWaveLong = canvasWaveLong.width = window.innerWidth/4*3+1;
       canvasWaveLong.style.bottom = window.innerHeight/5+"px";
       var waveLongctx = canvasWaveLong.getContext("2d");
-      
+
       var control = document.getElementById("control");
       var heightControl = control.style.height = window.innerHeight-8-16+"px";
       var widthControl = control.style.width = window.innerWidth/4-8-16+"px";
       control.style.right = "0px";
-      
+
       var canvasTuner = document.getElementById("canvasTuner");
       heightTuner = canvasTuner.height = parseInt(widthControl)//Math.min(parseInt(widthControl)+16, parseInt(heightControl)/2);
       widthTuner = canvasTuner.width = parseInt(widthControl)//Math.min(parseInt(widthControl)+16, parseInt(heightControl)/2);
       //canvasTuner.style.bottom = "0px";
       //canvasTuner.style.left = (parseInt(widthControl)+16-Math.min(parseInt(widthControl)+16, parseInt(heightControl)/2))/2 + "px";
       var tunerctx = canvasTuner.getContext("2d");
-      
+
       //var tuner = document.getElementById("control");
       //var heightTuner = tuner.height = window.innerHeight-8-16;
       //var widthTuner = tuner.width = window.innerWidth/4-8-16;
       //tuner.style.right = "0px";
       //var controlctx = control.getContext("2d");
-      
+
       //var controlctx = control.getContext("2d");
-      
+
       var frequency = 100;
       var rot = 0;
-      
-      var notes = [
-        {
-          note: "C",
-          freq: 16.35
-        },
-        {
-          note: "C#",
-          freq: 17.32
-        },
-        {
-          note: "D",
-          freq: 18.35
-        },
-        {
-          note: "D#",
-          freq: 19.45
-        },
-        {
-          note: "E",
-          freq: 20.60
-        },
-        {
-          note: "F",
-          freq: 21.83
-        },
-        {
-          note: "F#",
-          freq: 23.12
-        },
-        {
-          note: "G",
-          freq: 24.50
-        },
-        {
-          note: "G#",
-          freq: 25.96
-        },
-        {
-          note: "A",
-          freq: 27.50
-        },
-        {
-          note: "A#",
-          freq: 29.14
-        },
-        {
-          note: "B",
-          freq: 30.87
-        }
-      ];
-      
+
+      // var notes = [
+      //   {
+      //     note: "C",
+      //     freq: 16.35
+      //   },
+      //   {
+      //     note: "C#",
+      //     freq: 17.32
+      //   },
+      //   {
+      //     note: "D",
+      //     freq: 18.35
+      //   },
+      //   {
+      //     note: "D#",
+      //     freq: 19.45
+      //   },
+      //   {
+      //     note: "E",
+      //     freq: 20.60
+      //   },
+      //   {
+      //     note: "F",
+      //     freq: 21.83
+      //   },
+      //   {
+      //     note: "F#",
+      //     freq: 23.12
+      //   },
+      //   {
+      //     note: "G",
+      //     freq: 24.50
+      //   },
+      //   {
+      //     note: "G#",
+      //     freq: 25.96
+      //   },
+      //   {
+      //     note: "A",
+      //     freq: 27.50
+      //   },
+      //   {
+      //     note: "A#",
+      //     freq: 29.14
+      //   },
+      //   {
+      //     note: "B",
+      //     freq: 30.87
+      //   }
+      // ];
+
       var waveLongHigh = [];
       var waveLongLow = [];
-      
+
       var playSound = false;
       var playOscillator = false;
       var playInput = true;
@@ -208,7 +206,7 @@
       
       var maxCutOff = 255;
       var minCutOff = 0;
-      
+
       function toggleOverdrive() {
         overdrive = !overdrive;
         if (overdrive) {
@@ -219,7 +217,7 @@
           gainNode.gain.value /= 100;
         }
       }
-      
+
       function toggleInvert() {
         invert = !invert;
         gainNode.gain.value *= -1;
@@ -229,7 +227,7 @@
           document.getElementById("invertButtonTop").classList.remove("on");
         }
       }
-      
+
       function toggleSound() {
         playSound = !playSound;
         if (playSound) {
@@ -240,7 +238,7 @@
           document.getElementById("soundButtonTop").classList.remove("on");
         }
       }
-      
+
       function toggleSound() {
         playSound = !playSound;
         if (playSound) {
@@ -251,7 +249,7 @@
           document.getElementById("soundButtonTop").classList.remove("on");
         }
       }
-      
+
       function toggleOscillator() {
         playOscillator = !playOscillator;
         if (playOscillator) {
@@ -262,7 +260,7 @@
           document.getElementById("oscillatorButtonTop").classList.remove("on");
         }
       }
-      
+
       function toggleInput() {
         playInput = !playInput;
         if (playInput) {
@@ -273,7 +271,7 @@
           document.getElementById("inputButtonTop").classList.remove("on");
         }
       }
-      
+
       function toggleApprox() {
         approx += 1;
         approx = approx%3;
@@ -287,7 +285,7 @@
           document.getElementById("approxButtonTop").classList.add("on");
         }
       }
-      
+
       function toggleRes() {
         frequencyRes = !frequencyRes;
         if (!frequencyRes) {
@@ -296,7 +294,7 @@
           document.getElementById("resButtonTop").classList.remove("on");
         }
       }
-      
+
       function tunerDraw() {
         rot += (frequency-rot)/4;
         //wavectx.fillStyle = "darkslategrey";
@@ -309,22 +307,22 @@
         tunerctx.lineTo(widthTuner/2+widthTuner/2*Math.cos(rot/2000*Math.PI*2), heightTuner/2-heightTuner/2*Math.sin(rot/2000*Math.PI*2));
         tunerctx.stroke();
       }
-      
+
       function waveDraw(arr) {
         //wavectx.fillStyle = "darkslategrey";
         wavectx.strokeStyle = "yellow";
-        wavectx.lineWidth = 1;
+        wavectx.lineWidth = 2;
         //wavectx.fillRect(0, 0, widthWave, heightWave);
         wavectx.clearRect(0, 0, widthWave, heightWave);
         wavectx.beginPath();
         for (let i = 0; i < arr.length; i++) {
           //wavectx.fillStyle = "hsl(" + (120-arr[i]/255*120) + ",75%,75%)";
-          wavectx.lineTo(i/arr.length*widthWave, heightWave-arr[i]/256*heightWave); // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+          wavectx.lineTo(i/arr.length*widthWave, heightWave-arr[i]/256*heightWave);
           //drawctx.fillRect(100, 100, 100, 100);
         }
         wavectx.stroke();
       }
-      
+
       function waveLongDraw(arr) {
         waveLongHigh.push(Math.max.apply(null, arr));
         waveLongLow.push(Math.min.apply(null, arr));
@@ -343,14 +341,14 @@
           waveLongctx.fillRect(i/1000*widthWaveLong, heightWaveLong-waveLongLow[i]/256*heightWaveLong, widthWaveLong/1000+1, -(waveLongHigh[i]-waveLongLow[i])/256*heightWaveLong);
         }
       }
-      
+
       function frequencyDraw(arr) {
         //frequencyctx.fillStyle = "darkslategrey";
         //frequencyctx.fillRect(0, 0, widthFrequency, heightFrequency);
         frequencyctx.clearRect(0, 0, widthFrequency, heightFrequency);
         for (let i = 0; i < arr.length; i++) {
-          frequencyctx.fillStyle = "hsl(" + (120-arr[i]) + ",75%,75%)";
-          frequencyctx.fillRect(i/arr.length*widthFrequency, heightFrequency, widthFrequency/arr.length+1, -arr[i]/120*heightFrequency);
+          frequencyctx.fillStyle = "hsl(" + (120-arr[i]/255*120) + ",75%,75%)";
+          frequencyctx.fillRect(i/arr.length*widthFrequency, heightFrequency, widthFrequency/arr.length+1, -arr[i]/256*heightFrequency);
           //drawctx.fillRect(100, 100, 100, 100);
         } // toFixed
         frequencyctx.font = '32px mono';
@@ -361,7 +359,7 @@
         frequencyctx.fillText("0kHz", 0, heightFrequency);
         frequencyctx.strokeText((audioctx.sampleRate/1000/2).toFixed(1).toString()+"kHz", widthFrequency-((audioctx.sampleRate/1000/2).toFixed(1).toString()+"kHz").length*20, heightFrequency);
         frequencyctx.fillText((audioctx.sampleRate/1000/2).toFixed(1).toString()+"kHz", widthFrequency-((audioctx.sampleRate/1000/2).toFixed(1).toString()+"kHz").length*20, heightFrequency);
-      
+
         let maxI = 0;
         for (/*let i = arr.length-1; i >= 0; i--) {//*/let i = 0; i < arr.length; i++) {
           if (arr[i] > arr[maxI]) {
@@ -393,15 +391,15 @@
           frequencyctx.fillText((maxI*audioctx.sampleRate/1000/2/arr.length).toFixed(2).toString()+"kHz", widthFrequency-((maxI*audioctx.sampleRate/1000/2/arr.length).toFixed(2).toString()+"kHz").length*20, 32);
         }
       }
-     
+
       function callback(stream) {
         audioctx = new AudioContext();
         gainNode = audioctx.createGain();
         mic = audioctx.createMediaStreamSource(stream);
         spe = audioctx.createAnalyser();
         spe.fftSize = 256;
-        frequencyArray = new Float32Array(spe.frequencyBinCount);
-        waveFormArray = new Float32Array(spe.fftSize);
+        frequencyArray = new Uint8Array(spe.frequencyBinCount);
+        waveFormArray = new Uint8Array(spe.fftSize);
         osc = audioctx.createOscillator();
         osc.frequency.value = 187.5;
         //osc.connect(gainNode);
@@ -410,15 +408,15 @@
         gainNode.connect(spe);
         //spe.connect(audioctx.destination);
         //spe.disconnect(audioctx.destination);
-        
+
         gainNode.gain.value = 1;
         osc.type = 'sine'; // square sine triangle sawtooth
         var time = new Date();
-        
+
         gjio = setInterval(function() {
           if (updating) {
             spe.getByteFrequencyData(frequencyArray);
-            spe.getFloatFrequencyData(waveFormArray);
+            spe.getByteTimeDomainData(waveFormArray);
             let min = Math.min.apply(null, waveFormArray),
                 max = Math.max.apply(null, waveFormArray);
             if (max > maxCutOff || min < minCutOff) {
@@ -437,27 +435,27 @@
           }
         }, 20);
       }
-      
+
       control.addEventListener("mousedown", function(e) {
         if (e.clientX-window.innerWidth+parseInt(control.style.width)+24 < 8) {
           //alert(e.clientX-window.innerWidth+parseInt(control.style.width)+24);
           resizeControl = true;
         }
       });
-      
+
       window.addEventListener("mouseup", function(e) {
         resizeControl = false;
       });
-      
+
       document.addEventListener("mousemove", function(e) {
         if (resizeControl) {
           //control.style.width = parseInt(control.style.width)-e.movementX+"px";
-          
+
           widthFrequency = canvasFrequency.width = widthFrequency+e.movementX;
           widthWave = canvasWave.width = widthWave+e.movementX;
           widthWaveLong = canvasWaveLong.width = widthWaveLong+e.movementX;
           widthControl = control.style.width = parseInt(control.style.width)-e.movementX+"px";
-          
+
           heightTuner = canvasTuner.height = parseInt(widthControl);//Math.min(parseInt(widthControl)+16, parseInt(heightControl)/2);
           widthTuner = canvasTuner.width = parseInt(widthControl);//Math.min(parseInt(widthControl)+16, parseInt(heightControl)/2);
           //canvasTuner.style.left = (parseInt(widthControl)+16-Math.min(parseInt(widthControl)+16, parseInt(heightControl)/2))/2 + "px";
