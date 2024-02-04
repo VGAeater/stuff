@@ -34,6 +34,9 @@
 </style>
 
 <html>
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+  </head>
   <body>
     <div class="oscillator">
       <canvas class="canvas" id="canvasOscillator0"></canvas>
@@ -95,7 +98,7 @@
           oscillators.push([
             document.getElementById("canvasOscillator"+i),
             document.getElementById("canvasOscillator"+i).width = window.innerWidth/5*4,
-            document.getElementById("canvasOscillator"+i).height = window.innerHeight/4+1,
+            document.getElementById("canvasOscillator"+i).height = window.innerHeight/4,
             document.getElementById("canvasOscillator"+i).getContext("2d"),
             audioctx.createOscillator(),
             audioctx.createGain()
@@ -121,7 +124,7 @@
           }
           for (let i = 0; i < 4; i++) {
             if (osc[i][0]) {
-              oscillators[i][4].frequency.value = 2**(osc[i][1]/window.innerWidth/5*4*(11.7813597-5.78135972)+5.78135972);
+              oscillators[i][4].frequency.value = 2**(osc[i][1]/window.innerWidth/4*5*(11.7813597-5.78135972)+5.78135972);
               oscillators[i][5].connect(audioctx.destination);
             } else {
               try {
@@ -129,6 +132,14 @@
               } catch {}
             }
           }
+        } else { end(); }
+      }
+      
+      function end() {
+        for (let i = 0; i < 4; i++) {
+          try {
+            oscillators[i][5].disconnect(audioctx.destination);
+          } catch {}
         }
       }
       
@@ -137,8 +148,18 @@
         document.onclick = null;
         document.addEventListener("touchstart", touchHandler);
         document.addEventListener("touchmove", touchHandler);
-        document.addEventListener("touchend", touchHandler);
+        document.addEventListener("touchend", end);
       }
+      
+      window.addEventListener("resize", (event) => {
+        for (let i = 0; i < 4; i++) {
+          oscillators[i][0].style.top = window.innerHeight/4*i + "px";
+          oscillators[i][1] = document.getElementById("canvasOscillator"+i).width = window.innerWidth/5*4;
+          oscillators[i][2] = document.getElementById("canvasOscillator"+i).height = window.innerHeight/4;
+          oscillators[i][3].fillStyle = "hsl(" + i*100 + ",100%,50%)";
+          oscillators[i][3].fillRect(0, 0, oscillators[i][1], oscillators[i][2]);
+        }
+      });
     </script>
   </body>
 </html>
